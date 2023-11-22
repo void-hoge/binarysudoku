@@ -286,18 +286,18 @@ void Board<size>::update_hidden_subset(uint8_t limit) {
 
 template<uint32_t size>
 void Board<size>::update_naked_subset(uint8_t limit) {
-	std::array<uint16_t, sqsqsize> cellcands; // max size is 4
+	std::array<std::bitset<sqsize>, sqsqsize> cellcands;
 	std::fill(cellcands.begin(), cellcands.end(), 0);
 	for (uint8_t num = 0; num < sqsize; num++) {
 		for (uint32_t pos = 0; pos < sqsqsize; pos++) {
-			cellcands[pos] |= static_cast<uint16_t>(this->candidates[num][pos]) << num;
+			cellcands[pos] |= this->candidates[num][pos] << num;
 		}
 	}
 	for (uint32_t row = 0; row < sqsize; row++) {
 		for (uint32_t col = 0; col < sqsize; col++) {
 			auto pos = row*sqsize+col;
 			auto cands = cellcands[pos];
-			auto ppc = std::popcount(cands);
+			auto ppc = cands.count();
 			if (not(1 < ppc and ppc <= limit)) continue;
 			auto basemask = bits(0);
 			basemask[row*sqsize+col] = true;
@@ -313,7 +313,7 @@ void Board<size>::update_naked_subset(uint8_t limit) {
 				}
 				if (cnt == 0) {
 					for (uint8_t num = 0; num < sqsize; num++) {
-						if (cands & ((uint64_t)1<<num)) {
+						if (cands[num]) {
 							this->candidates[num] &= ~(this->rowmask(row) ^ mask);
 						}
 					}
@@ -331,7 +331,7 @@ void Board<size>::update_naked_subset(uint8_t limit) {
 				}
 				if (cnt == 0) {
 					for (uint8_t num = 0; num < sqsize; num++) {
-						if (cands & ((uint64_t)1<<num)) {
+						if (cands[num]) {
 							this->candidates[num] &= ~(this->colmask(col) ^ mask);
 						}
 					}
@@ -351,7 +351,7 @@ void Board<size>::update_naked_subset(uint8_t limit) {
 				}
 				if (cnt == 0) {
 					for (uint8_t num = 0; num < sqsize; num++) {
-						if (cands & ((uint64_t)1<<num)) {
+						if (cands[num]) {
 							this->candidates[num] &= ~(this->blockmask(blkidx) ^ mask);
 						}
 					}

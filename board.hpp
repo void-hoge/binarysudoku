@@ -5,7 +5,6 @@
 template<uint32_t size>
 class Board {
 private:
-public:
 	// aliases
 	static constexpr auto sqsize = size*size;
 	static constexpr auto cbsize = size*sqsize;
@@ -68,6 +67,7 @@ public:
 	inline uint32_t inblockidx(uint32_t row, uint32_t col) const;
 	inline uint32_t block2pos(uint32_t blkidx, uint32_t inblkidx) const;
 
+	// algorithmics
 	uint32_t fullbits_popcount(const fullbits& grid) const;
 	bits fullbits_union(const fullbits& grid) const;
 	bits get_naked_singles(const fullbits& grid) const;
@@ -79,7 +79,7 @@ public:
 	void update_hidden_block_subset(uint8_t limit=size);
 	void update_hidden_subset(uint8_t limit=size);
 	void update_naked_subset(uint8_t limit=size);
-//public:
+public:
 	Board();
 	void dump(std::ostream& ost = std::cout) const;
 	void show(std::ostream& ost = std::cout) const;
