@@ -12,7 +12,6 @@ int main() {
 	auto end = std::chrono::system_clock::now();
 	if (slv.solutioncount) {
 		for (auto&& sol: slv.solutions) {
-			sol.dump();
 			sol.show();
 		}
 	}

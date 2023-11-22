@@ -464,6 +464,7 @@ template<uint32_t size>
 bool Board<size>::update() {
 	auto before = this->fullbits_popcount(this->candidates);
 	if (before == sqsqsize) {
+		this->update_naked_single();
 		return false;
 	}
 	this->update_naked_single();
