@@ -363,14 +363,8 @@ void Board<size>::update_naked_subset(uint8_t limit) {
 
 template<uint32_t size>
 Board<size>::Board() {
-	for (auto&& row: this->stable) {
-		for (auto&& val: row) {
-			val = sqsize;
-		}
-	}
-	for (auto&& grid: this->candidates) {
-		grid = bits(0).flip();
-	}
+	this->reset_stables();
+	this->reset_candidates();
 }
 
 template<uint32_t size>
@@ -417,9 +411,25 @@ void Board<size>::input(std::istream& ist) {
 		for (uint32_t col = 0; col < sqsize; col++) {
 			std::string tmp;
 			ist >> tmp;
-			try {
-				this->put(row, col, std::stoi(tmp)-1);
-			}catch (std::exception& e) {}
+			if (tmp == "-") {
+				continue;
+			}else {
+				try {
+					this->put(row, col, std::stoi(tmp)-1);
+				}catch (std::exception& e) {}
+			}
+		}
+	}
+}
+
+template<uint32_t size>
+void Board<size>::input(std::vector<int>& problem) {
+	for (uint32_t row = 0; row < sqsize; row++) {
+		for (uint32_t col = 0; col < sqsize; col++) {
+			auto pos = row * sqsize + col;
+			if (problem[pos] != sqsize) {
+				this->put(row, col, problem[pos]);
+			}
 		}
 	}
 }
