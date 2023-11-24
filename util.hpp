@@ -16,6 +16,7 @@
 #include <map>
 #include <bit>
 #include <random>
+#include <queue>
 
 inline std::ostream& operator<<(std::ostream& ost, std::uint8_t num) {
 	ost << (int)num;

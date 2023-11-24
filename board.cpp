@@ -362,9 +362,28 @@ void Board<size>::update_naked_subset(uint8_t limit) {
 }
 
 template<uint32_t size>
-Board<size>::Board() {
-	this->reset_stables();
-	this->reset_candidates();
+Board<size>::Board() : rowmask_(rowmaskgen()), colmask_(colmaskgen()), blockmask_(blockmaskgen()){
+	this->init_stables();
+	this->init_candidates();
+}
+
+template<uint32_t size>
+Board<size>::Board(const Board<size>& bd) : rowmask_(rowmaskgen()), colmask_(colmaskgen()), blockmask_(blockmaskgen()){
+	this->stable = bd.stable;
+	this->stablerows = bd.stablerows;
+	this->stablecols = bd.stablecols;
+	this->stableblocks = bd.stableblocks;
+	this->candidates = bd.candidates;
+}
+
+template<uint32_t size>
+Board<size>& Board<size>::operator=(const Board<size>& bd) {
+	this->stable = bd.stable;
+	this->stablerows = bd.stablerows;
+	this->stablecols = bd.stablecols;
+	this->stableblocks = bd.stableblocks;
+	this->candidates = bd.candidates;
+	return *this;
 }
 
 template<uint32_t size>
@@ -403,6 +422,7 @@ void Board<size>::show(std::ostream& ost) const {
 		ost << "|" << std::endl;
 	}
 	ost << line << std::endl;
+	ost << std::dec;
 }
 
 template<uint32_t size>
@@ -537,19 +557,24 @@ uint32_t Board<size>::get_most_stable_blank() const {
 }
 
 template<uint32_t size>
-std::vector<uint8_t> Board<size>::get_candidates(uint32_t pos) const {
-	std::vector<uint8_t> cands;
+std::bitset<Board<size>::sqsize> Board<size>::get_candidates(uint32_t pos) const {
+	std::bitset<sqsize> cands;
 	for (uint32_t num = 0; num < sqsize; num++) {
 		if (this->candidates[num][pos]) {
-			cands.push_back(num);
+			cands[num] = 1;
 		}
 	}
 	return cands;
 }
 
 template<uint32_t size>
-std::vector<uint8_t> Board<size>::get_candidates(uint32_t row, uint32_t col) const {
+std::bitset<Board<size>::sqsize> Board<size>::get_candidates(uint32_t row, uint32_t col) const {
 	return this->get_candidates(row*sqsize + col);
+}
+
+template<uint32_t size>
+uint32_t Board<size>::get_candidate_count() const {
+	return this->fullbits_popcount(this->candidates);
 }
 
 template<uint32_t size>
@@ -581,7 +606,7 @@ void Board<size>::erase_stable(uint32_t row, uint32_t col) {
 }
 
 template<uint32_t size>
-void Board<size>::reset_stables() {
+void Board<size>::init_stables() {
 	for (auto&& row: this->stable) {
 		for (auto&& val: row) {
 			val = sqsize;
@@ -599,7 +624,7 @@ void Board<size>::reset_stables() {
 }
 
 template<uint32_t size>
-void Board<size>::reset_candidates() {
+void Board<size>::init_candidates() {
 	for (auto&& grid: this->candidates) {
 		grid = bits(0).flip();
 	}

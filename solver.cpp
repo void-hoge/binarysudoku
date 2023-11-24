@@ -22,13 +22,15 @@ bool Solver<size>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool full
 	}
 	auto nextpos = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
-	for (auto&& cand: candidates) {
-		if (dfs(bd, nextpos, cand, fullsearch)) {
-			if (!fullsearch) {
-				return true;
+	for (uint32_t cand = 0; cand < sqsize; cand++) {
+		if (candidates[cand]) {
+			if (this->dfs(bd, nextpos, cand, fullsearch)) {
+				if (!fullsearch) {
+					return true;
+				}
+			}else {
+				bd.erase_single_candidate(nextpos, cand);
 			}
-		} else {
-			bd.erase_single_candidate(nextpos, cand);
 		}
 	}
 	return false;
@@ -54,20 +56,18 @@ void Solver<size>::solve(Board<size> bd, bool fullsearch) {
 	}
 	auto nextpos = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
-	for (auto&& cand: candidates) {
-		if (this->dfs(bd, nextpos, cand, fullsearch)) {
-			if (!fullsearch) {
-				return;
+	for (uint32_t num = 0; num < sqsize; num++) {
+		if (candidates[num]) {
+			if (this->dfs(bd, nextpos, num, fullsearch)) {
+				if (!fullsearch) {
+					return;
+				}
+			}else {
+				bd.erase_single_candidate(nextpos, num);
+				while (bd.update()) this->updatecount++;
+				if (!bd.is_valid()) return;
 			}
-		}else {
-			bd.erase_single_candidate(nextpos, cand);
-			while (bd.update()) {
-				this->updatecount++;
-			}
-			if (!bd.is_valid()) {
-				return;
-			}
- 		}
+		}
 	}
 	if (this->solutioncount == 0) {
 		std::cerr << "Invalid Problem. It's cannot be solved." << std::endl;
@@ -93,13 +93,13 @@ bool Solver<size>::dfs_check_uniqueness(Board<size> bd, uint32_t pos, uint8_t nu
 	auto nextpos = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	bool solvable = false;
-	for (auto&& cand: candidates) {
-		if (this->dfs_check_uniqueness(bd, nextpos, cand)) {
-			solvable = true;
-		}
-		bd.erase_single_candidate(nextpos, cand);
-		if (this->solutioncount > 1) {
-			return true;
+	for (uint32_t cand = 0; cand < sqsize; cand++) {
+		if (candidates[cand]) {
+			if (this->dfs_check_uniqueness(bd, nextpos, cand)) {
+				solvable = true;
+			}
+			bd.erase_single_candidate(nextpos, cand);
+			if (this->solutioncount > 1) return true;
 		}
 	}
 	return solvable;
@@ -123,11 +123,11 @@ bool Solver<size>::check_uniqueness(Board<size> bd) {
 	}
 	auto nextpos = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
-	for (auto&& cand: candidates) {
-		this->dfs_check_uniqueness(bd, nextpos, cand);
-		bd.erase_single_candidate(nextpos, cand);
-		if (this->solutioncount > 1) {
-			return false;
+	for (uint32_t cand = 0; cand < sqsize; cand++) {
+		if (candidates[cand]) {
+			this->dfs_check_uniqueness(bd, nextpos, cand);
+			bd.erase_single_candidate(nextpos, cand);
+			if (this->solutioncount > 1) return false;
 		}
 	}
 	return this->solutioncount == 1;

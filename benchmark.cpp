@@ -25,8 +25,8 @@ int main(const int argc, const char** argv) {
 		Board<size> bd;
 		Solver<size> slv;
 		std::istringstream iss(buf);
-		bd.input(iss);
 		auto begin = std::chrono::system_clock::now();
+		bd.input(iss);
 		slv.solve(bd, false);
 		auto end = std::chrono::system_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();

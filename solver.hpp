@@ -4,6 +4,10 @@
 
 template<uint32_t size>
 class Solver {
+private:
+	static constexpr auto sqsize = size*size;
+	static constexpr auto cbsize = size*sqsize;
+	static constexpr auto sqsqsize = sqsize*sqsize;
 public:
 	uint32_t guesscount;
 	uint32_t updatecount;
