@@ -23,7 +23,7 @@ int main(const int argc, const char** argv) {
 	while (std::getline(ifs, buf)) {
 		if (buf == "") continue;
 		Board<size> bd;
-		Solver<size> slv;
+		Solver<size, EXCLUDE_SUBSET> slv;
 		std::istringstream iss(buf);
 		auto begin = std::chrono::system_clock::now();
 		bd.input(iss);

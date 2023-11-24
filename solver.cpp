@@ -1,15 +1,17 @@
 #include "solver.hpp"
 
-template class Solver<3>;
-template class Solver<4>;
+template class Solver<3, ALL>;
+template class Solver<3, EXCLUDE_SUBSET>;
+template class Solver<4, ALL>;
+template class Solver<4, EXCLUDE_SUBSET>;
 
-template<uint32_t size>
-bool Solver<size>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool fullsearch) {
+template<uint32_t size, uint32_t algomask>
+bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool fullsearch) {
 	this->guesscount++;
 	if (!bd.put(pos, num)) {
 		return false;
 	}
-	while (bd.update()) {
+	while (bd.template update<algomask>()) {
 		this->updatecount++;
 	}
 	if (!bd.is_valid()) {
@@ -36,13 +38,13 @@ bool Solver<size>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool full
 	return false;
 }
 
-template<uint32_t size>
-void Solver<size>::solve(Board<size> bd, bool fullsearch) {
+template<uint32_t size, uint32_t algomask>
+void Solver<size, algomask>::solve(Board<size> bd, bool fullsearch) {
 	this->solutions.clear();
 	this->guesscount = 0;
 	this->updatecount = 0;
 	this->solutioncount = 0;
-	while (bd.update()) {
+	while (bd.template update<algomask>()) {
 		this->updatecount++;
 	}
 	if (!bd.is_valid()) {
@@ -64,7 +66,7 @@ void Solver<size>::solve(Board<size> bd, bool fullsearch) {
 				}
 			}else {
 				bd.erase_single_candidate(nextpos, num);
-				while (bd.update()) this->updatecount++;
+				while (bd.template update<algomask>()) this->updatecount++;
 				if (!bd.is_valid()) return;
 			}
 		}
@@ -74,13 +76,13 @@ void Solver<size>::solve(Board<size> bd, bool fullsearch) {
 	}
 }
 
-template<uint32_t size>
-bool Solver<size>::dfs_check_uniqueness(Board<size> bd, uint32_t pos, uint8_t num) {
+template<uint32_t size, uint32_t algomask>
+bool Solver<size, algomask>::dfs_check_uniqueness(Board<size> bd, uint32_t pos, uint8_t num) {
 	this->guesscount++;
 	if (!bd.put(pos, num)) {
 		return false;
 	}
-	while (bd.update()) {
+	while (bd.template update<algomask>()) {
 		this->updatecount++;
 	}
 	if (!bd.is_valid()) {
@@ -105,12 +107,12 @@ bool Solver<size>::dfs_check_uniqueness(Board<size> bd, uint32_t pos, uint8_t nu
 	return solvable;
 }
 
-template<uint32_t size>
-bool Solver<size>::check_uniqueness(Board<size> bd) {
+template<uint32_t size, uint32_t algomask>
+bool Solver<size, algomask>::check_uniqueness(Board<size> bd) {
 	this->guesscount = 0;
 	this->updatecount = 0;
 	this->solutioncount = 0;
-	while (bd.update()) {
+	while (bd.template update<algomask>()) {
 		this->updatecount++;
 	}
 	if (!bd.is_valid()) {

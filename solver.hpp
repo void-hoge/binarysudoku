@@ -2,7 +2,7 @@
 
 #include "board.hpp"
 
-template<uint32_t size>
+template<uint32_t size, uint32_t algomask = ALL>
 class Solver {
 private:
 	static constexpr auto sqsize = size*size;

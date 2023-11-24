@@ -3,10 +3,10 @@
 #include <cassert>
 #include "../solver.hpp"
 
-template<uint32_t size>
+template<uint32_t size, uint32_t algomask>
 void test() {
 	auto bd = Board<size>();
-	auto slv = Solver<size>();
+	auto slv = Solver<size, algomask>();
 	bd.input();
 	bd.show();
 	auto begin = std::chrono::system_clock::now();
@@ -22,9 +22,9 @@ void test() {
 
 int main(const int argc, const char **argv) {
 	if (argc == 1 or (argc == 2 and std::stoi(argv[1]) == 3)) {
-		test<3>();
+		test<3, EXCLUDE_SUBSET>();
 	}else if (argc == 2 and std::stoi(argv[1]) == 4) {
-		test<4>();
+		test<4, ALL>();
 	}else {
 		throw std::invalid_argument("Invalid command line argument.");
 	}
