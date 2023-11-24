@@ -3,8 +3,8 @@
 #include <chrono>
 #include <fstream>
 #include <cassert>
-#include "board.hpp"
-#include "solver.hpp"
+#include "../board.hpp"
+#include "../solver.hpp"
 
 constexpr uint32_t size = 3;
 
