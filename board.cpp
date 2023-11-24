@@ -613,3 +613,19 @@ void Board<size>::init_candidates() {
 		grid = bits(0).flip();
 	}
 }
+
+template<uint32_t size>
+std::string Board<size>::to_string() const {
+	std::stringstream ss;
+	ss << std::dec;
+	for (auto&& line: this->stable) {
+		for (auto&& num: line) {
+			if (num == sqsize) {
+				ss << "- ";
+			}else {
+				ss << num << " ";
+			}
+		}
+	}
+	return ss.str();
+}

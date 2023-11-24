@@ -7,25 +7,27 @@ constexpr uint32_t algomask = EXCLUDE_SUBSET;
 template<uint32_t size>
 void test(uint32_t clues, uint32_t seed) {
 	Generator<size, algomask> gen(seed);
-	std::cout << "seed: " << seed << "\n"
+	std::cerr << "seed: " << seed << "\n"
 			  << "clues: " << clues << std::endl;
-	std::cout << "attempting" << std::flush;
+	std::cerr << "attempting" << std::flush;
 	uint32_t attempts = 0;
 	auto begin = std::chrono::system_clock::now();
 	do {
-		std::cout << "." << std::flush;
+		std::cerr << "." << std::flush;
 		attempts++;
 	} while (!gen.generate(clues));
-	std::cout << std::endl;
+	std::cerr << std::endl;
 	auto end = std::chrono::system_clock::now();
 	auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
 	gen.reconstruct();
-	gen.bd.show();
+	gen.bd.show(std::cerr);
+	std::string tmp = gen.bd.to_string();
 	gen.slv.solve(gen.bd, true);
 	for (auto&& sol: gen.slv.solutions) {
-		sol.show();
+		sol.show(std::cerr);
 	}
-	std::cout << attempts << " attempts in " << (double)elapsed/1000000000 << " seconds (" << (double)attempts/elapsed*1000000000 << " attempts per second)\n"
+	std::cout << tmp << std::endl;
+	std::cerr << attempts << " attempts in " << (double)elapsed/1000000000 << " seconds (" << (double)attempts/elapsed*1000000000 << " attempts per second)\n"
 			  << "solutions: " << gen.slv.solutions.size() << "\n"
 			  << "guesses: " << gen.slv.guesscount << std::endl;
 }

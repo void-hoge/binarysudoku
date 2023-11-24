@@ -130,4 +130,5 @@ public:
 	void erase_stable(uint32_t row, uint32_t col);
 	void init_stables();
 	void init_candidates();
+	std::string to_string() const;
 };
