@@ -3,7 +3,7 @@
 #include "board.hpp"
 #include "solver.hpp"
 
-template<uint32_t size>
+template<uint32_t size, uint32_t algomask = ALL>
 class Generator {
 	static constexpr auto sqsize = size*size;
 	static constexpr auto cbsize = size*sqsize;

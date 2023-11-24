@@ -1,13 +1,15 @@
 #include "generator.hpp"
 
-template class Generator<3>;
-template class Generator<4>;
+template class Generator<3, ALL>;
+template class Generator<3, EXCLUDE_SUBSET>;
+template class Generator<4, ALL>;
+template class Generator<4, EXCLUDE_SUBSET>;
 
-template<uint32_t size>
-Generator<size>::Generator(uint32_t seed) : mt(std::mt19937(seed)) {}
+template<uint32_t size, uint32_t algomask>
+Generator<size, algomask>::Generator(uint32_t seed) : mt(std::mt19937(seed)) {}
 
-template<uint32_t size>
-void Generator<size>::reconstruct() {
+template<uint32_t size, uint32_t algomask>
+void Generator<size, algomask>::reconstruct() {
 	this->bd.init_stables();
 	this->bd.init_candidates();
 	for (auto&& [pos, num]: this->clues) {
@@ -15,8 +17,8 @@ void Generator<size>::reconstruct() {
 	}
 }
 
-template<uint32_t size>
-bool Generator<size>::place_random_clue() {
+template<uint32_t size, uint32_t algomask>
+bool Generator<size, algomask>::place_random_clue() {
 	this->reconstruct();
 	auto blank = this->bd.get_blank();
 	uint32_t pos = 0;
@@ -50,20 +52,19 @@ bool Generator<size>::place_random_clue() {
 	return valid;
 }
 
-template<uint32_t size>
-bool Generator<size>::generate(uint32_t num_clues) {
+template<uint32_t size, uint32_t algomask>
+bool Generator<size, algomask>::generate(uint32_t num_clues) {
 	this->clues.clear();
 	this->reconstruct();
 	while (this->clues.size() < num_clues) this->place_random_clue();
-	bool improved = true;
 	this->reconstruct();
-	while (this->bd.update());
+	while (this->bd.template update<algomask>());
 	uint32_t current = this->bd.get_candidate_count();
-	for (uint32_t i = 0; i < num_clues * 2 or improved; i++) {
+	for (uint32_t i = 0; i <= num_clues and current > sqsqsize; i++) {
 		auto minimum = this->clues.front();
 		this->clues.pop_front();
 		this->reconstruct();
-		while (this->bd.update());
+		while (this->bd.template update<algomask>());
 		auto blank = this->bd.get_blank();
 		uint32_t min_evalue = current;
 		Board<size> backup = bd;
@@ -74,10 +75,10 @@ bool Generator<size>::generate(uint32_t num_clues) {
 					if (candidates[num]) {
 						this->bd = backup;
 						this->bd.put(pos, num);
-						while (this->bd.update());
+						while (this->bd.template update<algomask>());
 						if (this->bd.is_valid()) {
 							auto evalue = this->bd.get_candidate_count();
-							if (evalue <= min_evalue) {
+							if (evalue < min_evalue) {
 								minimum = {pos, num};
 								min_evalue = evalue;
 							}
@@ -87,7 +88,9 @@ bool Generator<size>::generate(uint32_t num_clues) {
 			}
 		}
 		this->clues.push_back(minimum);
-		improved = current > min_evalue;
+		if (current > min_evalue) {
+			i = 0;
+		}
 		current = min_evalue;
 	}
 	this->reconstruct();

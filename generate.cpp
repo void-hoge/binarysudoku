@@ -3,6 +3,7 @@
 #include "generator.hpp"
 
 constexpr uint32_t size = 3;
+constexpr uint32_t algomask = EXCLUDE_SUBSET;
 
 #define RANDOM_SEED
 
@@ -14,11 +15,11 @@ int main() {
 	std::random_device rng;
 	seed = rng();
 	std::cout << "seed: " << seed << std::endl;
-	Generator<size> gen(seed);
+	Generator<size, algomask> gen(seed);
 #else
 	std::cin >> seed;
 	std::cout << "seed: " << seed << std::endl;
-	Generator<size> gen(seed);
+	Generator<size, algomask> gen(seed);
 #endif
 	std::cout << "clues: " << clues << std::endl;
 	std::cout << "attempting" << std::flush;
@@ -34,7 +35,7 @@ int main() {
 	gen.bd.show();
 	gen.slv.solve(gen.bd, true);
 	gen.slv.solutions.front().show();
-	std::cout << attempts << " attempts in " << (double)elapsed/1000000000 << " seconds" << std::endl;
+	std::cout << attempts << " attempts in " << (double)elapsed/1000000000 << " seconds (" << (double)attempts/elapsed*1000000000 << " attempts per sec)" << std::endl;
 	std::cout << "solution count: " << gen.slv.solutions.size() << std::endl;
 	std::cout << "guess count: " << gen.slv.guesscount << std::endl;
 }
