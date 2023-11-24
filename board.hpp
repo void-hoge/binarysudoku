@@ -2,6 +2,15 @@
 
 #include "util.hpp"
 
+constexpr uint32_t NAKED_SINGLE     = 1 << 0;
+constexpr uint32_t HIDDEN_SINGLE    = 1 << 1;
+constexpr uint32_t LOCKED_CANDIDATE = 1 << 2;
+constexpr uint32_t HIDDEN_SUBSET    = 1 << 3;
+constexpr uint32_t NAKED_SUBSET     = 1 << 4;
+constexpr uint32_t FISH             = 1 << 5;
+constexpr uint32_t ALL              = ~0;
+constexpr uint32_t EXCLUDE_SUBSET   = NAKED_SINGLE | HIDDEN_SINGLE | LOCKED_CANDIDATE;
+
 template<uint32_t size>
 class Board {
 private:
@@ -76,7 +85,7 @@ private:
 	bits get_naked_singles(const fullbits& grid) const;
 	void update_hidden_single();
 	void update_naked_single();
-	void update_locked_candidates();
+	void update_locked_candidate();
 	void update_hidden_row_subset(uint8_t limit=size);
 	void update_hidden_col_subset(uint8_t limit=size);
 	void update_hidden_block_subset(uint8_t limit=size);
@@ -92,7 +101,22 @@ public:
 	void input(std::vector<int>& problem);
 	bool put(uint32_t row, uint32_t col, uint8_t num);
 	bool put(uint32_t pos, uint8_t num);
-	bool update();
+
+	template<uint32_t algomask = ALL>
+	bool update() {
+		auto before = this->fullbits_popcount(this->candidates);
+		if (before == sqsqsize) {
+			this->update_naked_single();
+			return false;
+		}
+		if constexpr(algomask & NAKED_SINGLE    ) this->update_naked_single();
+		if constexpr(algomask & HIDDEN_SINGLE   ) this->update_hidden_single();
+		if constexpr(algomask & LOCKED_CANDIDATE) this->update_locked_candidate();
+		if constexpr(algomask & HIDDEN_SUBSET   ) this->update_hidden_subset();
+		if constexpr(algomask & NAKED_SUBSET    ) this->update_naked_subset();
+		auto after = this->fullbits_popcount(this->candidates);
+		return after != before;
+	}
 	bool is_valid() const;
 	bool is_solved() const;
 	bits get_blank() const;

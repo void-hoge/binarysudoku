@@ -153,7 +153,7 @@ void Board<size>::update_hidden_single() {
 }
 
 template<uint32_t size>
-void Board<size>::update_locked_candidates() {
+void Board<size>::update_locked_candidate() {
 	for (uint32_t num = 0; num < sqsize; num++) {
 		for (uint32_t blkidx = 0; blkidx < sqsize; blkidx++) {
 			auto block = this->candidates[num] & this->blockmask(blkidx);
@@ -488,22 +488,6 @@ bool Board<size>::put(uint32_t pos, uint8_t num) {
 	auto row = pos / sqsize;
 	auto col = pos % sqsize;
 	return this->put(row, col, num);
-}
-
-template<uint32_t size>
-bool Board<size>::update() {
-	auto before = this->fullbits_popcount(this->candidates);
-	if (before == sqsqsize) {
-		this->update_naked_single();
-		return false;
-	}
-	this->update_naked_single();
-	this->update_hidden_single();
-	this->update_locked_candidates();
-	this->update_hidden_subset();
-	this->update_naked_subset();
-	auto after = this->fullbits_popcount(this->candidates);
-	return after != before;
 }
 
 template<uint32_t size>
