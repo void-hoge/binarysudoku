@@ -19,8 +19,8 @@ $ make
 - Some Sudoku databases express problems using integers from 1 to 9 and `.` as blank.
   - However, this format is not scalable because it cannot be used if the number not have a single digit.
 - In this project, `-` is used as blank and each blank or integers are separated by spaces.
-- The output of `board::show()` is displayed as 0 to 8 instead of 1 to 9.
-  - If the size is 4, displayed as 0 to f.
+- Integers of the output of `board::show()` is 0 to 8 instead of 1 to 9.
+  - 0 to f when 16x16.
 ```
 +---------+---------+---------+
 |       8 |       4 |         |
@@ -125,7 +125,7 @@ $
 ## Benchmark
 - `bench <filename>`
 - For performance benchmarking
-- It's only support 9x9.
+- It's support only 9x9.
 
 ```
 $ ./bench ../problems/17clues.txt
