@@ -11,6 +11,10 @@ $ cmake ..
 $ make
 ```
 
+## Depends
+- cmake
+- g++
+
 ## Problem Format
 - Some Sudoku databases express problems using integers from 1 to 9 and `.` as blank.
   - However, this format is not scalable because it cannot be used if the number not have a single digit.
@@ -29,8 +33,8 @@ $ make
 +---------+---------+---------+
 |         | 1  8    |         |
 | 5       |         |       7 |
-|         |    3    |         |
-+---------+---------+---------+
+|         |    3    |         |+
+---------+---------+---------+
 ```
 - This problem is represented as follow.
 ```
@@ -118,9 +122,10 @@ guesses: 0
 $
 ```
 
-## bench
+## Benchmark
 - `bench <filename>`
 - For performance benchmarking
+- It's only support 9x9.
 
 ```
 $ ./bench ../problems/17clues.txt
