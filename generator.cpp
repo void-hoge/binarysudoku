@@ -96,3 +96,22 @@ bool Generator<size, algomask>::generate(uint32_t num_clues) {
 	this->reconstruct();
 	return this->slv.check_uniqueness(this->bd);
 }
+
+template<uint32_t size, uint32_t algomask>
+std::string Generator<size, algomask>::to_string() const {
+	std::array<uint8_t, sqsqsize> grid;
+	std::fill(grid.begin(), grid.end(), sqsize);
+	for (auto&& [pos, num]: this->clues) {
+		grid[pos] = num;
+	}
+	std::stringstream ss;
+	for (auto&& num: grid) {
+		if (num == sqsize) {
+			ss << "-";
+		}else {
+			ss << (int)num + 1;
+		}
+		ss << " ";
+	}
+	return ss.str();
+}

@@ -2,9 +2,7 @@
 #include <chrono>
 #include "../generator.hpp"
 
-constexpr uint32_t algomask = EXCLUDE_SUBSET;
-
-template<uint32_t size>
+template<uint32_t size, uint32_t algomask>
 void test(uint32_t clues, uint32_t seed) {
 	Generator<size, algomask> gen(seed);
 	std::cerr << "seed: " << seed << "\n"
@@ -20,13 +18,16 @@ void test(uint32_t clues, uint32_t seed) {
 	auto end = std::chrono::system_clock::now();
 	auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
 	gen.reconstruct();
+	std::vector<int> tmp(size*size*size*size, size*size);
+	for (auto&& [pos, num]: gen.clues) {
+		tmp[pos] = num;
+	}
 	gen.bd.show(std::cerr);
-	std::string tmp = gen.bd.to_string();
 	gen.slv.solve(gen.bd, true);
 	for (auto&& sol: gen.slv.solutions) {
 		sol.show(std::cerr);
 	}
-	std::cout << tmp << std::endl;
+	std::cout << gen.to_string() << std::endl;
 	std::cerr << attempts << " attempts in " << (double)elapsed/1000000000 << " seconds (" << (double)attempts/elapsed*1000000000 << " attempts per second)\n"
 			  << "solutions: " << gen.slv.solutions.size() << "\n"
 			  << "guesses: " << gen.slv.guesscount << std::endl;
@@ -47,9 +48,9 @@ int main(const int argc, const char **argv) {
 		seed = rng();
 	}
 	if (size == 3) {
-		test<3>(clues, seed);
+		test<3, EXCLUDE_SUBSET>(clues, seed);
 	}else if (size == 4) {
-		test<4>(clues, seed);
+		test<4, ALL>(clues, seed);
 	}else {
 		throw std::invalid_argument("Invalid Sudoku size.");
 	}

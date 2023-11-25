@@ -37,6 +37,7 @@ int main(const int argc, const char** argv) {
 		std::cout << std::dec
 				  << "No." << problem_count << "\n"
 				  << "elapsed: " << (double)elapsed/1000 << " microseconds\n"
+				  << "guesses: " << slv.guesscount << "\n"
 				  << std::endl;
 	}
 	std::cout << "average time: " << (double)total_time/problem_count/1000 << " microseconds\n"

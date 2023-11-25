@@ -17,4 +17,5 @@ public:
 	void reconstruct();
 	bool place_random_clue();
 	bool generate(uint32_t num_clues);
+	std::string to_string() const;
 };

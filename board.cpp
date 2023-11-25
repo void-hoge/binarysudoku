@@ -617,14 +617,14 @@ void Board<size>::init_candidates() {
 template<uint32_t size>
 std::string Board<size>::to_string() const {
 	std::stringstream ss;
-	ss << std::dec;
 	for (auto&& line: this->stable) {
 		for (auto&& num: line) {
 			if (num == sqsize) {
-				ss << "- ";
+				ss << "-";
 			}else {
-				ss << num << " ";
+				ss << (int)num + 1;
 			}
+			ss << " ";
 		}
 	}
 	return ss.str();
