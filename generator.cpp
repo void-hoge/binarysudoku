@@ -109,7 +109,7 @@ std::string Generator<size, algomask>::to_string() const {
 		if (num == sqsize) {
 			ss << "-";
 		}else {
-			ss << (int)num + 1;
+			ss << num + 1;
 		}
 		ss << " ";
 	}

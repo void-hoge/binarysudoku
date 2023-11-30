@@ -26,7 +26,7 @@ inline std::ostream& operator<<(std::ostream& ost, std::uint8_t num) {
 template<typename T>
 inline std::ostream& operator<<(std::ostream& ost, const std::vector<T>& vec) {
 	ost << "[";
-	for (int i = 0; i < vec.size(); i++) {
+	for (uint32_t i = 0; i < vec.size(); i++) {
 		ost << vec[i] << (i == vec.size()-1 ? "" : ", ");
 	}
 	ost << "]";
