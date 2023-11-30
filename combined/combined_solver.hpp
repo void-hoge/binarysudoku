@@ -4,12 +4,12 @@
 
 template<uint32_t size, uint32_t algomask>
 class CombinedSolver {
-public:
+private:
 	// aliases
 	static constexpr auto sqsize = size*size;
 	static constexpr auto cbsize = size*sqsize;
 	static constexpr auto sqsqsize = sqsize*sqsize;
-
+public:
 	uint32_t guesscount;
 	uint32_t solutioncount;
 	std::vector<CombinedBoard<size>> solutions;

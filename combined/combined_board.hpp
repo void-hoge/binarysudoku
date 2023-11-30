@@ -4,16 +4,19 @@
 
 template<uint32_t size>
 class CombinedBoard {
-public:
+private:
 	static constexpr auto sqsize = size*size;
 	static constexpr auto cbsize = size*sqsize;
 	static constexpr auto sqsqsize = sqsize*sqsize;
 	uint32_t block2pos(uint32_t blkidx, uint32_t inblkidx) const;
+public:
 	std::vector<Board<size>> bds;
-	const std::array<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>, sqsize> links;
+	// links[srcidx][srcblk]{(dstidx, dstblk),...}
+	const std::vector<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>> links;
+
 	CombinedBoard(
 		std::vector<Board<size>>& bds,
-		std::array<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>, sqsize>& links);
+		std::vector<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>>& links);
 
 	uint32_t get_candidate_count() const;
 	uint32_t copy_block(

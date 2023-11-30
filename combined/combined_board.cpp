@@ -21,11 +21,11 @@ uint32_t CombinedBoard<size>::block2pos(uint32_t blkidx, uint32_t inblkidx) cons
 template<uint32_t size>
 CombinedBoard<size>::CombinedBoard(
 	std::vector<Board<size>>& bds,
-	std::array<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>, sqsize>& links): bds(bds), links(links) {}
+	std::vector<std::array<std::set<std::pair<uint32_t, uint32_t>>, sqsize>>& links): bds(bds), links(links) {}
 
 template<uint32_t size>
 void CombinedBoard<size>::show(std::ostream& ost) const {
-	for (uint32_t i = 0; i < sqsize; i++) {
+	for (uint32_t i = 0; i < this->bds.size(); i++) {
 		for (uint32_t j = 0; j < sqsize; j++) {
 			for (auto& [p, q]: links[i][j]) {
 				ost << "(" << i << "," << j << ")" << " -> (" << p << "," << q << ")" << std::endl;
@@ -61,7 +61,6 @@ uint32_t CombinedBoard<size>::copy_block(const std::pair<uint32_t, uint32_t> src
 	}
 	return cnt;
 }
-
 
 template<uint32_t size>
 bool CombinedBoard<size>::is_valid() const {
@@ -108,12 +107,12 @@ bool CombinedBoard<size>::update(const int32_t start) {
 	}
 	while (que.size()) {
 		uint32_t idx = que.front();
-		used[idx] = false;
 		que.pop();
+		used[idx] = false;
 		if (this->update_single<algomask>(idx)) {
 			for (uint32_t blk = 0; blk < sqsize; blk++) {
 				for (auto&& dst: this->links[idx][blk]) {
-					if (this->copy_block({idx, blk}, dst) > 0 and used[dst.first] == false) {
+					if (this->copy_block({idx, blk}, dst) > 0 and !used[dst.first]) {
 						que.push(dst.first);
 						used[dst.first] = true;
 					}
