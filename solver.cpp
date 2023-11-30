@@ -22,7 +22,7 @@ bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num,
 		this->solutions.push_back(bd);
 		return true;
 	}
-	auto nextpos = bd.get_most_stable_blank();
+	auto [nextpos, _] = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	for (uint32_t cand = 0; cand < sqsize; cand++) {
 		if (candidates[cand]) {
@@ -56,7 +56,7 @@ void Solver<size, algomask>::solve(Board<size> bd, bool fullsearch) {
 		this->solutions.push_back(bd);
 		return;
 	}
-	auto nextpos = bd.get_most_stable_blank();
+	auto [nextpos, _] = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	for (uint32_t num = 0; num < sqsize; num++) {
 		if (candidates[num]) {
@@ -92,7 +92,7 @@ bool Solver<size, algomask>::dfs_check_uniqueness(Board<size> bd, uint32_t pos, 
 		this->solutioncount++;
 		return true;
 	}
-	auto nextpos = bd.get_most_stable_blank();
+	auto [nextpos, _] = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	bool solvable = false;
 	for (uint32_t cand = 0; cand < sqsize; cand++) {
@@ -123,7 +123,7 @@ bool Solver<size, algomask>::check_uniqueness(Board<size> bd) {
 		this->solutioncount++;
 		return true;
 	}
-	auto nextpos = bd.get_most_stable_blank();
+	auto [nextpos, _] = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	for (uint32_t cand = 0; cand < sqsize; cand++) {
 		if (candidates[cand]) {

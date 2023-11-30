@@ -519,7 +519,7 @@ Board<size>::bits Board<size>::get_blank() const {
 }
 
 template<uint32_t size>
-uint32_t Board<size>::get_most_stable_blank() const {
+std::pair<uint32_t, uint32_t> Board<size>::get_most_stable_blank() const {
 	std::array<uint8_t, sqsqsize> blankcnt;
 	std::fill(blankcnt.begin(), blankcnt.end(), 0);
 	for (uint32_t num = 0; num < sqsize; num++) {
@@ -537,7 +537,7 @@ uint32_t Board<size>::get_most_stable_blank() const {
 			}
 		}
 	}
-	return idx;
+	return {idx, min};
 }
 
 template<uint32_t size>
@@ -557,18 +557,36 @@ std::bitset<Board<size>::sqsize> Board<size>::get_candidates(uint32_t row, uint3
 }
 
 template<uint32_t size>
+std::array<std::bitset<Board<size>::sqsize>, Board<size>::sqsize> Board<size>::get_block_candidates(uint32_t blkidx) const {
+	std::array<std::bitset<sqsize>, sqsize> ret;
+	for (uint32_t num = 0; num < sqsize; num++) {
+		for (uint32_t y = 0; y < size; y++) {
+			for (uint32_t x = 0; x < size; x++) {
+				auto inblkidx = y * size + x;
+				ret[num][inblkidx] = this->candidates[num][this->block2pos(blkidx, inblkidx)];
+			}
+		}
+	}
+	return ret;
+}
+
+template<uint32_t size>
 uint32_t Board<size>::get_candidate_count() const {
 	return this->fullbits_popcount(this->candidates);
 }
 
 template<uint32_t size>
-void Board<size>::erase_single_candidate(uint32_t pos, uint32_t num) {
+bool Board<size>::erase_single_candidate(uint32_t pos, uint32_t num) {
+	bool tmp = this->candidates[num][pos];
 	this->candidates[num][pos] = false;
+	return tmp;
 }
 
 template<uint32_t size>
-void Board<size>::erase_single_candidate(uint32_t row, uint32_t col, uint32_t num) {
-	this->candidates[num][row*sqsize+col] = false;
+bool Board<size>::erase_single_candidate(uint32_t row, uint32_t col, uint32_t num) {
+	bool tmp = this->candidates[num][row * sqsize + col];
+	this->candidates[num][row * sqsize + col] = false;
+	return tmp;
 }
 
 template<uint32_t size>

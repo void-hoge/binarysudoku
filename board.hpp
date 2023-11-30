@@ -120,12 +120,13 @@ public:
 	bool is_valid() const;
 	bool is_solved() const;
 	bits get_blank() const;
-	uint32_t get_most_stable_blank() const;
+	std::pair<uint32_t, uint32_t> get_most_stable_blank() const;
 	std::bitset<sqsize> get_candidates(uint32_t pos) const;
 	std::bitset<sqsize> get_candidates(uint32_t row, uint32_t col) const;
+	std::array<std::bitset<sqsize>, sqsize> get_block_candidates(uint32_t blkidx) const;
 	uint32_t get_candidate_count() const;
-	void erase_single_candidate(uint32_t pos, uint32_t num);
-	void erase_single_candidate(uint32_t row, uint32_t col, uint32_t num);
+	bool erase_single_candidate(uint32_t pos, uint32_t num);
+	bool erase_single_candidate(uint32_t row, uint32_t col, uint32_t num);
 	void erase_stable(uint32_t pos);
 	void erase_stable(uint32_t row, uint32_t col);
 	void init_stables();
