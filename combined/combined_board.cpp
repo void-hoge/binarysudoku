@@ -1,9 +1,9 @@
 #include "combined_board.hpp"
 
 template class CombinedBoard<3>;
-template bool CombinedBoard<3>::update<ALL>(const int32_t);
+template bool CombinedBoard<3>::update<ALL>();
 template class CombinedBoard<4>;
-template bool CombinedBoard<4>::update<ALL>(const int32_t);
+template bool CombinedBoard<4>::update<ALL>();
 
 template<uint32_t size>
 uint32_t CombinedBoard<size>::block2pos(uint32_t blkidx, uint32_t inblkidx) const {
@@ -91,19 +91,14 @@ bool CombinedBoard<size>::update_single(const uint32_t idx) {
 
 template<uint32_t size>
 template<uint32_t algomask>
-bool CombinedBoard<size>::update(const int32_t start) {
+bool CombinedBoard<size>::update() {
 	auto before = this->get_candidate_count();
 	if (before == this->bds.size() * sqsqsize) return false;
 	std::queue<uint32_t> que;
 	std::vector<bool> used(this->bds.size(), false);
-	if (start == -1) {
-		for (uint32_t i = 0; i < this->bds.size(); i++) {
-			que.push(i);
-			used[i] = true;
-		}
-	}else {
-		que.push(start);
-		used[start] = true;
+	for (uint32_t i = 0; i < this->bds.size(); i++) {
+		que.push(i);
+		used[i] = true;
 	}
 	while (que.size()) {
 		uint32_t idx = que.front();

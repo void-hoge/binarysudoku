@@ -30,7 +30,7 @@ public:
 	bool update_single(const uint32_t idx);
 
 	template<uint32_t algomask = ALL>
-	bool update(const int32_t start = -1);
+	bool update();
 
 	void show(std::ostream& ost = std::cout) const;
 	std::pair<uint32_t, uint32_t> get_most_stable_blank() const;
