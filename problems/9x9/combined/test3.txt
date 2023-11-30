@@ -61,3 +61,5 @@
 - - - - - - 8 5 -
 - 4 - - - - - - -
 - - - 7 - 9 6 - -
+
+https://en.grandgames.net/sudokucross/id418375

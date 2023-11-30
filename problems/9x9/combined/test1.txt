@@ -53,3 +53,5 @@
 - - - 4 - 8 - - -
 - - - 5 - 7 - - -
 5 - - - 2 - - - 8
+
+https://programmer.ink/think/solving-combined-sudoku-by-backtracking-method.html
