@@ -158,6 +158,75 @@ average guesses: 0.587799
 $
 ```
 
+## Combined Sudoku
+- Here it is possible to consider problems where multiple Sudokus share sub-grids.
+- `combined` is the program that solves this.
+
+```
+$ ./combined < ../problems/9x9/combined/double1.txt 
++---------+---------+---------+                    
+| 0       | 3     2 |       5 |                    
+|         |         |         |                    
+|         | 5  8  6 |         |                    
++---------+---------+---------+                    
+| 7     5 |         | 4     1 |                    
+|       6 |    7    | 3       |                    
+| 4     1 |         | 6     0 |                    
++---------+---------+---------+---------+---------+
+|         | 6  1  8 |         | 5     4 |       0 |
+|         |         |         |         |         |
+| 1       | 4     3 |         | 2  1  8 |         |
++---------+---------+---------+---------+---------+
+                    | 8     7 |         | 6  0  1 |
+                    |       5 |    0    | 7       |
+                    | 4     0 |         | 8     5 |
+                    +---------+---------+---------+
+                    |         | 6  7  5 |         |
+                    |         |         |         |
+                    | 2       | 0     1 |       8 |
+                    +---------+---------+---------+
++---------+---------+---------+                    
+| 0  6  7 | 3  4  2 | 8  1  5 |                    
+| 8  5  4 | 7  0  1 | 2  6  3 |                    
+| 3  1  2 | 5  8  6 | 0  4  7 |                    
++---------+---------+---------+                    
+| 7  3  5 | 8  6  0 | 4  2  1 |                    
+| 2  0  6 | 1  7  4 | 3  5  8 |                    
+| 4  8  1 | 2  3  5 | 6  7  0 |                    
++---------+---------+---------+---------+---------+
+| 5  4  0 | 6  1  8 | 7  3  2 | 5  6  4 | 1  8  0 |
+| 6  2  3 | 0  5  7 | 1  8  4 | 7  3  0 | 2  5  6 |
+| 1  7  8 | 4  2  3 | 5  0  6 | 2  1  8 | 4  7  3 |
++---------+---------+---------+---------+---------+
+                    | 8  2  7 | 4  5  3 | 6  0  1 |
+                    | 3  1  5 | 8  0  6 | 7  2  4 |
+                    | 4  6  0 | 1  2  7 | 8  3  5 |
+                    +---------+---------+---------+
+                    | 0  4  8 | 6  7  5 | 3  1  2 |
+                    | 6  5  1 | 3  8  2 | 0  4  7 |
+                    | 2  7  3 | 0  4  1 | 5  6  8 |
+                    +---------+---------+---------+
+61 microseconds
+guesscount: 0
+$
+```
+
+- The problem represented with following tokens separated by spaces or line breaks. 
+  - (All numbers are in decimal.)
+  - Number of sub-Sudokus
+  - Number of shared sub-grids.
+  - Information about shared sub-grids.
+	- `a b c d` means that the sub-grid `b` of sub-Sudoku `a` is shared with the sub-grid `d` of sub-Sudoku `c`.
+	- There are 0-indexed.
+  - Sub-Sudoku problems.
+- Above problem is represented as follow.
+```
+2 1
+0 8 1 0
+1 - - 4 - 3 - - 6 - - - - - - - - - - - - 6 9 7 - - - 8 - 6 - - - 5 - 2 - - 7 - 8 - 4 - - 5 - 2 - - - 7 - 1 - - - 7 2 9 - - - - - - - - - - - - 2 - - 5 - 4 - - - 
+- - - 6 - 5 - - 1 - - - - - - - - - - - - 3 2 9 - - - 9 - 8 - - - 7 1 2 - - 6 - 1 - 8 - - 5 - 1 - - - 9 - 6 - - - 7 8 6 - - - - - - - - - - - - 3 - - 1 - 2 - - 9 
+```
+
 ## Author
 - Mugi Noda (void-hoge)
 
