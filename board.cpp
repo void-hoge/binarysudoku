@@ -394,13 +394,14 @@ void Board<size>::dump(std::ostream& ost) const {
 
 template<uint32_t size>
 void Board<size>::show(std::ostream& ost) const {
+	uint32_t digit = std::log2(sqsize - 1) / 4 + 1;
 	ost << std::hex;
 	std::stringstream ss;
 	for (uint32_t i = 0; i < sqsize; i++) {
 		if ((i % size) == 0) {
 			ss << "+";
 		}
-		ss << "---";
+		ss << std::setw(digit + 2) << std::setfill('-') << "";
 	}
 	ss << "+";
 	auto line = ss.str();
@@ -414,15 +415,23 @@ void Board<size>::show(std::ostream& ost) const {
 			}
 			auto tmp = this->stable[row][col];
 			if (tmp == sqsize) {
-				ost << "   ";
+				ost << std::setw(digit + 2) << std::setfill(' ') << "";
 			}else {
-				ost << " " << tmp << " ";
+				ost << " " << std::setw(digit) << tmp << " ";
 			}
 		}
 		ost << "|" << std::endl;
 	}
 	ost << line << std::endl;
 	ost << std::dec;
+}
+
+template<uint32_t size>
+std::pair<uint32_t, uint32_t> Board<size>::get_bbox_size() const {
+	uint32_t digit = std::log2(sqsize - 1) / 4 + 1; // digit of hexadecimal
+	uint32_t width = (digit + 2) * sqsize + size + 1;
+	uint32_t height = sqsize + size + 1;
+	return {height, width};
 }
 
 template<uint32_t size>

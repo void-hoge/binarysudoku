@@ -32,6 +32,8 @@ public:
 	template<uint32_t algomask = ALL>
 	bool update();
 
+	std::vector<std::pair<int, int>> get_offset2d() const;
 	void show(std::ostream& ost = std::cout) const;
+	std::string to_string() const;
 	std::pair<uint32_t, uint32_t> get_most_stable_blank() const;
 };

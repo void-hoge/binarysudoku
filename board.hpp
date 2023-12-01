@@ -97,6 +97,7 @@ public:
 	Board<size>& operator=(const Board<size>& bd);
 	void dump(std::ostream& ost = std::cout) const;
 	void show(std::ostream& ost = std::cout) const;
+	std::pair<uint32_t, uint32_t> get_bbox_size() const;
 	void input(std::istream& ist = std::cin);
 	void input(std::vector<int>& problem);
 	bool put(uint32_t row, uint32_t col, uint8_t num);
