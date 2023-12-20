@@ -18,5 +18,6 @@ public:
 	bool place_random_clue();
 	void init_clues(uint32_t num_clues);
 	bool minimize_candidates();
+	bool minimize_solutions();
 	std::string to_string() const;
 };

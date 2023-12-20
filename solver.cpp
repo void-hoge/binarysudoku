@@ -6,7 +6,10 @@ template class Solver<4, ALL>;
 template class Solver<4, EXCLUDE_SUBSET>;
 
 template<uint32_t size, uint32_t algomask>
-bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool fullsearch, bool savesolution) {
+bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num, bool fullsearch, bool savesolution, uint32_t limit) {
+	if (this->solutioncount > limit) {
+		return true;
+	}
 	this->guesscount++;
 	if (!bd.put(pos, num)) {
 		return false;
@@ -26,7 +29,7 @@ bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num,
 	auto candidates = bd.get_candidates(nextpos);
 	for (uint32_t cand = 0; cand < sqsize; cand++) {
 		if (candidates[cand]) {
-			if (this->dfs(bd, nextpos, cand, fullsearch, savesolution)) {
+			if (this->dfs(bd, nextpos, cand, fullsearch, savesolution, limit)) {
 				if (!fullsearch) {
 					return true;
 				}
@@ -39,7 +42,7 @@ bool Solver<size, algomask>::dfs(Board<size> bd, uint32_t pos, std::uint8_t num,
 }
 
 template<uint32_t size, uint32_t algomask>
-void Solver<size, algomask>::solve(Board<size> bd, bool fullsearch, bool savesolution) {
+bool Solver<size, algomask>::solve(Board<size> bd, bool fullsearch, bool savesolution, uint32_t limit) {
 	this->solutions.clear();
 	this->guesscount = 0;
 	this->updatecount = 0;
@@ -48,32 +51,32 @@ void Solver<size, algomask>::solve(Board<size> bd, bool fullsearch, bool savesol
 		this->updatecount++;
 	}
 	if (!bd.is_valid()) {
-		std::cerr << "Invalid Problem. It's cannot be solved." << std::endl;
-		return;
+		return false;
 	}
 	if (bd.is_solved()) {
 		this->solutioncount++;
 		if (savesolution) this->solutions.push_back(bd);
-		return;
+		return true;
 	}
 	auto [nextpos, _] = bd.get_most_stable_blank();
 	auto candidates = bd.get_candidates(nextpos);
 	for (uint32_t num = 0; num < sqsize; num++) {
 		if (candidates[num]) {
-			if (this->dfs(bd, nextpos, num, fullsearch, savesolution)) {
+			if (this->dfs(bd, nextpos, num, fullsearch, savesolution, limit)) {
 				if (!fullsearch) {
-					return;
+					return true;
 				}
 			}else {
 				bd.erase_single_candidate(nextpos, num);
 				while (bd.template update<algomask>()) this->updatecount++;
-				if (!bd.is_valid()) return;
+				if (!bd.is_valid()) return true;
 			}
 		}
 	}
 	if (this->solutioncount == 0) {
-		std::cerr << "Invalid Problem. It's cannot be solved." << std::endl;
+		return false;
 	}
+	return true;
 }
 
 template<uint32_t size, uint32_t algomask>

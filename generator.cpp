@@ -97,9 +97,60 @@ bool Generator<size, algomask>::minimize_candidates() {
 			i = 0;
 		}
 		current = min_evalue;
+		std::cerr << current << std::endl;
 	}
 	this->reconstruct();
 	return this->slv.check_uniqueness(this->bd);
+}
+
+template<uint32_t size, uint32_t algomask>
+bool Generator<size, algomask>::minimize_solutions() {
+	const uint32_t num_clues = this->clues.size();
+	std::cout << "minimizing solutions..." << std::endl;
+	this->reconstruct();
+	if (!this->slv.solve(this->bd, /* fullsearch= */ true, /* savesolution */ false)) {
+		return false;
+	}
+	std::cout << this->slv.solutioncount << std::endl;
+	if (this->slv.check_uniqueness(this->bd)) {
+		return true;
+	}
+	uint32_t current = this->slv.solutioncount;
+	for (uint32_t i = 0; i <= num_clues and current > 1; i++) {
+		auto minimum = this->clues.front();
+		this->clues.pop_front();
+		this->reconstruct();
+		auto blank = this->bd.get_blank();
+		uint32_t min_evalue = current;
+		Board<size> backup = bd;
+		for (uint32_t pos = 0; pos < sqsqsize; pos++) {
+			if (blank[pos]) {
+				auto candidates = this->bd.get_candidates(pos);
+				for (uint32_t num = 0; num < sqsize; num++) {
+					if (candidates[num]) {
+						this->bd = backup;
+						this->bd.put(pos, num);
+						while (this->bd.template update<algomask>());
+						if (this->slv.solve(this->bd, true, false, current)) {
+							auto evalue = this->slv.solutioncount;
+							if (evalue > 0 and evalue < min_evalue) {
+								minimum = {pos, num};
+								min_evalue = evalue;
+							}
+						}
+					}
+				}
+			}
+		}
+		this->clues.push_back(minimum);
+		if (current > min_evalue) {
+			i = 0;
+		}
+		current = min_evalue;
+		std::cout << current << std::endl;
+	}
+	this->reconstruct();
+	return current == 1;
 }
 
 template<uint32_t size, uint32_t algomask>

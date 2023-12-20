@@ -14,7 +14,8 @@ void test(uint32_t clues, uint32_t seed) {
 		std::cerr << "." << std::flush;
 		attempts++;
 		gen.init_clues(clues);
-	} while (!gen.minimize_candidates());
+		gen.minimize_candidates();
+	} while (!gen.minimize_solutions());
 	std::cerr << std::endl;
 	auto end = std::chrono::system_clock::now();
 	auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
