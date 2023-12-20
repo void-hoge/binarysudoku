@@ -27,7 +27,7 @@ int main(const int argc, const char** argv) {
 		std::istringstream iss(buf);
 		auto begin = std::chrono::system_clock::now();
 		bd.input(iss);
-		slv.solve(bd, false);
+		slv.solve(bd, /* full_search= */ false, /* savesolution= */ false);
 		auto end = std::chrono::system_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count();
 		total_time += elapsed;

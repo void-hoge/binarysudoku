@@ -10,7 +10,7 @@ void test() {
 	bd.input();
 	bd.show();
 	auto begin = std::chrono::system_clock::now();
-	slv.solve(bd, false);
+	slv.solve(bd, /* full_search= */ false, /* savesolution= */ true);
 	auto end = std::chrono::system_clock::now();
 	for (auto&& sol: slv.solutions) {
 		sol.show();
