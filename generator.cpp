@@ -53,10 +53,15 @@ bool Generator<size, algomask>::place_random_clue() {
 }
 
 template<uint32_t size, uint32_t algomask>
-bool Generator<size, algomask>::generate(uint32_t num_clues) {
+void Generator<size, algomask>::init_clues(uint32_t num_clues) {
 	this->clues.clear();
 	this->reconstruct();
 	while (this->clues.size() < num_clues) this->place_random_clue();
+}
+
+template<uint32_t size, uint32_t algomask>
+bool Generator<size, algomask>::minimize_candidates() {
+	const uint32_t num_clues = this->clues.size();
 	this->reconstruct();
 	while (this->bd.template update<algomask>());
 	uint32_t current = this->bd.get_candidate_count();

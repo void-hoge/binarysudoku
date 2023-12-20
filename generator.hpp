@@ -16,6 +16,7 @@ public:
 	Generator(unsigned seed=0);
 	void reconstruct();
 	bool place_random_clue();
-	bool generate(uint32_t num_clues);
+	void init_clues(uint32_t num_clues);
+	bool minimize_candidates();
 	std::string to_string() const;
 };
