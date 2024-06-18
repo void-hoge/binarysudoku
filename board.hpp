@@ -133,4 +133,5 @@ public:
 	void init_stables();
 	void init_candidates();
 	std::string to_string() const;
+	std::vector<int> to_vector() const;
 };

@@ -656,3 +656,18 @@ std::string Board<size>::to_string() const {
 	}
 	return ss.str();
 }
+
+template<uint32_t size>
+std::vector<int> Board<size>::to_vector() const {
+	std::vector<int> vec(sqsqsize);
+	for (uint32_t row = 0; row < sqsize; row++) {
+		for (uint32_t col = 0; col < sqsize; col++) {
+			if (this->stable[row][col] == sqsize) {
+				vec[row * sqsize + col] = 0;
+			}else {
+				vec[row * sqsize + col] = this->stable[row][col] + 1;
+			}
+		}
+	}
+	return vec;
+}
