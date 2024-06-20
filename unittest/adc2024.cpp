@@ -15,8 +15,9 @@ int main() {
 	slv.solve(bd, false);
 	try {
 		auto sol = slv.solutions.at(0).to_vector();
-		std::cout << "guesscount: " << slv.guesscount << std::endl;
-		std::cout << "updatecont: " << slv.updatecount << std::endl;
+		std::cerr << "guesscount: " << slv.guesscount << std::endl;
+		std::cerr << "updatecont: " << slv.updatecount << std::endl;
+		std::cerr << "solutions : " << slv.solutions.size() << std::endl;
 		for (uint32_t i = 0; i < size * size * size * size; i += size * size) {
 			for (uint32_t j = 0; j < size * size; j++) {
 				std::cout << sol[i + j] << " ";
