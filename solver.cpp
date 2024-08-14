@@ -1,6 +1,7 @@
 #include "solver.hpp"
 
 template class Solver<3, ALL>;
+template class Solver<3, SINGLES>;
 template class Solver<3, EXCLUDE_SUBSET>;
 template class Solver<4, ALL>;
 template class Solver<4, EXCLUDE_SUBSET>;

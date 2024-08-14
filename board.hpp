@@ -9,6 +9,7 @@ constexpr uint32_t HIDDEN_SUBSET    = 1 << 3;
 constexpr uint32_t NAKED_SUBSET     = 1 << 4;
 constexpr uint32_t FISH             = 1 << 5;
 constexpr uint32_t ALL              = ~0;
+constexpr uint32_t SINGLES          = NAKED_SINGLE | HIDDEN_SINGLE;
 constexpr uint32_t EXCLUDE_SUBSET   = NAKED_SINGLE | HIDDEN_SINGLE | LOCKED_CANDIDATE;
 
 template<uint32_t size>
