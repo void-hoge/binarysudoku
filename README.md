@@ -1,5 +1,6 @@
 # BinarySudoku
-- a bitboard sudoku solver
+- A bitboard sudoku solver
+- This program was awarded for demonstrating the best execution speed in the Algorithm Design Contest at the DA Symposium 2024 held in Toba, Mie prefecture.
 
 ## Build
 ```
